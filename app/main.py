@@ -1,15 +1,22 @@
 from fastapi import FastAPI
 from app.schemas.test import Student
 from app.models.dataConfig import Base
-from app.database.connection import engine
+from app.database.connection import engine, SessionLocal
 from app.models import tables  # noqa: F401
-from app.api.auth import router
-from app.api import auth
+from app.routers.auth import router
+from app.routers import auth
+from app.routers.seed_admin import seed_admin
 app = FastAPI()
 # create the table
 
 Base.metadata.create_all(bind=engine)
-
+## first call the seed admin function here to create the admin user in the database
+# create a session and pass it to the seeder, then close the session
+db = SessionLocal()
+try:
+	seed_admin(db)
+finally:
+	db.close()
 # # include routers
 app.include_router(auth.router)
 

@@ -19,9 +19,9 @@ def decode_token(token: str):
     try:
         payload = jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
 
-        user_id = payload.get("user_id")
+        id = payload.get("id")
 
-        return user_id
+        return id
 
     except JWTError:
         return None
