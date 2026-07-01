@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from sqlalchemy.orm import Session
 from app.schemas.auth_schemas import RegisterUser,UserLogin,LoginResponse
 from app.services.authServices import register,userLogin
@@ -17,3 +17,13 @@ async def register_user(user: RegisterUser,db: Session = Depends(get_db)):
 async def login_user(user: UserLogin,db: Session = Depends(get_db))->LoginResponse:
     return await userLogin(user, db)
 
+@router.post("/logout")
+async def logout(response: Response):
+
+    response.delete_cookie(
+        key="access_token"
+    )
+
+    return {
+        "message":"Logged out successfully"
+    }

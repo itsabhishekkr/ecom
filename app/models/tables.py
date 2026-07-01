@@ -19,7 +19,7 @@ class UserRole(str, enum.Enum):
 
 class User(Base):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True,autoincrement=True)
     full_name = Column(String(100), nullable=False)
     email = Column(String(100),unique=True,index=True,nullable=False)
     phone = Column(String(20))
@@ -63,6 +63,7 @@ class Address(Base):
         Integer,
         primary_key=True,
         index=True
+        ,autoincrement=True
     )
 
     user_id = Column(
@@ -105,7 +106,9 @@ class Category(Base):
 
     id = Column(
         Integer,
-        primary_key=True
+        primary_key=True,
+        index=True,
+        autoincrement=True
     )
 
     name = Column(
@@ -128,7 +131,9 @@ class Product(Base):
 
     id = Column(
         Integer,
-        primary_key=True
+        primary_key=True,
+        index=True,
+        autoincrement=True
     )
 
     name = Column(
@@ -186,7 +191,9 @@ class Cart(Base):
 
     id = Column(
         Integer,
-        primary_key=True
+        primary_key=True,
+        index=True,
+        autoincrement=True
     )
 
     user_id = Column(
@@ -210,7 +217,9 @@ class CartItem(Base):
 
     id = Column(
         Integer,
-        primary_key=True
+        primary_key=True,
+        index=True,
+        autoincrement=True
     )
 
     cart_id = Column(
@@ -247,7 +256,9 @@ class Order(Base):
 
     id = Column(
         Integer,
-        primary_key=True
+        primary_key=True,
+        index=True,
+        autoincrement=True
     )
 
     user_id = Column(

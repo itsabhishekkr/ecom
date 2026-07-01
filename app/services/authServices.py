@@ -51,3 +51,10 @@ async def userLogin(user: UserLogin,db: Session):
     token = create_access_token({"id": existing_user.id,"email": existing_user.email,"role":existing_user.role})
 
     return {"access_token": token,"token_type": "bearer"}
+
+async def logOut(token: str,db: Session):
+    decoded_token = decode_token(token)
+    user_id = decoded_token.get("id")
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException
