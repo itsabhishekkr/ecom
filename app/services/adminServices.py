@@ -20,12 +20,12 @@ async def create_category(category: CategoryCreate,db: Session):
     return {"message":"Category created successfully","category_id": new_category.id}
 
 
-# PUT /categories/{id}
-# Admin only
 async def update_category(id: int,category: CategoryUpdate,db: Session):
     existing = (db.query(Category).filter(Category.id == id).first())
+    if not existing:
+        raise HTTPException(status_code=404,detail="Category not found")
+    
     existing.name = category.name
-
     db.commit()
 
     return {
@@ -33,23 +33,10 @@ async def update_category(id: int,category: CategoryUpdate,db: Session):
     }
 
 
-# DELETE /categories/{id}
-# Admin only
-async def delete_category(
-    id: int,
-    current_user=Depends(require_admin),
-    db: Session = Depends(get_db)
-):
+async def delete_category(id: int,db: Session):
 
-    category = (
-        db.query(Category)
-        .filter(Category.id == id)
-        .first()
-    )
+    category = (db.query(Category).filter(Category.id == id).first())
 
     db.delete(category)
     db.commit()
-
-    return {
-        "message":"Deleted successfully"
-    }
+    return {"message":"Deleted successfully"}

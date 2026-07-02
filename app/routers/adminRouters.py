@@ -17,3 +17,7 @@ async def create_new_category(category: CategoryCreate,current_user=Depends(requ
 @router.put("/categories/{id}")
 async def update_existing_category(id: int,category: CategoryUpdate,current_user=Depends(require_admin),db: Session = Depends(get_db)):
     return await update_category(id, category,db)
+
+@router.delete("/categories/{id}")
+async def delete_existing_category(id: int,current_user=Depends(require_admin),db: Session = Depends(get_db)):
+    return await delete_category(id,db)
