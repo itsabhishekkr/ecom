@@ -6,6 +6,7 @@ from app.models import tables  # noqa: F401
 from app.routers.auth import router as auth_routers
 from app.routers.adminRouters import router as admin_routers
 from app.routers.commanRouters import router as comman_routers
+from app.routers.providerRourers import router as provider_routers
 from app.routers.seed_admin import seed_admin
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
@@ -20,7 +21,7 @@ finally:
 app.include_router(auth_routers)
 app.include_router(admin_routers)
 app.include_router(comman_routers)
-
+app.include_router(provider_routers)
 
 # @app.get("/")
 # def read_root():

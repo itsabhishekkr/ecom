@@ -43,6 +43,8 @@ async def userLogin(user: UserLogin,db: Session):
 
     if not verify_password(user.password,existing_user.password_hash): 
         raise HTTPException(status_code=401,detail="Wrong password")
+    if existing_user.is_active == False:
+        raise HTTPException(status_code=403,detail="Account blocked by admin")
     
     token = create_access_token({"id": existing_user.id,"email": existing_user.email,"role":existing_user.role})
 

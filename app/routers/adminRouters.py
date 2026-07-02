@@ -4,7 +4,8 @@ from app.core.getRole import get_current_user,require_admin
 from app.models.dataConfig import get_db
 from app.models.tables import Category
 from app.schemas.auth_schemas import CategoryCreate,CategoryUpdate
-from app.services.adminServices import create_category,update_category,delete_category
+from app.services.adminServices import create_category,update_category,delete_category,get_all_users
+
 router = APIRouter(
     prefix="/admin",
     tags=["Authentication"]
@@ -21,3 +22,7 @@ async def update_existing_category(id: int,category: CategoryUpdate,current_user
 @router.delete("/categories/{id}")
 async def delete_existing_category(id: int,current_user=Depends(require_admin),db: Session = Depends(get_db)):
     return await delete_category(id,db)
+
+@router.get("/all/users")
+async def get_users(current_user=Depends(require_admin),db: Session = Depends(get_db)):
+    return await get_all_users(db)
