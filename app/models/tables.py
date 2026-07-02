@@ -24,18 +24,9 @@ class User(Base):
     email = Column(String(100),unique=True,index=True,nullable=False)
     phone = Column(String(20))
     password_hash = Column(String,nullable=False)
-
     role = Column(Enum(UserRole),default=UserRole.CUSTOMER)
-
-    is_active = Column(
-        Boolean,
-        default=True
-    )
-
-    created_at = Column(
-        DateTime,
-        server_default=func.now()
-    )
+    is_active = Column(Boolean,default=True)
+    created_at = Column(DateTime,server_default=func.now())
 
     # Relationships
     addresses = relationship(

@@ -6,7 +6,6 @@ from app.models.dataConfig import declarative_base,get_db
 from app.core.security import hash_password,verify_password
 from app.core.tokenveryfy import create_access_token,decode_token
 
-
 async def register(user: RegisterUser,db: Session):
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
@@ -33,10 +32,7 @@ async def register(user: RegisterUser,db: Session):
     db.commit()
     db.refresh(new_user)
 
-    return {
-        "message": "User registered successfully",
-        "user_id": new_user.id
-    }
+    return {"message": "User registered successfully","user_id": new_user.id}
 
 
 async def userLogin(user: UserLogin,db: Session):

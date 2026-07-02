@@ -15,3 +15,9 @@ class UserLogin(BaseModel):
 class LoginResponse(BaseModel):
     access_token: str
     token_type: str
+
+class CategoryCreate(BaseModel):
+    name: str
+
+class CategoryUpdate(BaseModel):
+    name: str
