@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura - Premium E-Commerce</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="/frontend/css/style.css">
+</head>
+<body>
+    <!-- Toast Notifications Container -->
+    <div id="toast-container"></div>
+
+    <!-- Navigation Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <a href="#" class="logo" id="nav-logo">
+                <span class="logo-accent">Aura</span>Shop
+            </a>
+            
+            <div class="search-bar-container">
+                <input type="text" id="search-input" placeholder="Search products, brands...">
+                <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+
+            <nav class="nav-links">
+                <a href="#" class="nav-link active" id="nav-home"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="#" class="nav-link hidden" id="nav-orders"><i class="fa-solid fa-box-archive"></i> Orders</a>
+                <a href="#" class="nav-link hidden" id="nav-provider-dashboard"><i class="fa-solid fa-chart-line"></i> Seller Dashboard</a>
+                <a href="#" class="nav-link hidden" id="nav-admin-dashboard"><i class="fa-solid fa-user-shield"></i> Admin Panel</a>
+            </nav>
+
+            <div class="header-actions">
+                <button class="cart-btn" id="cart-toggle-btn">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-badge" id="cart-badge-count">0</span>
+                </button>
+
+                <div class="user-menu" id="user-menu-area">
+                    <button class="btn btn-outline" id="login-trigger-btn">Login</button>
+                    <button class="btn btn-primary" id="register-trigger-btn">Register</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+        <!-- Categories Navigation Section -->
+        <section class="categories-bar" id="categories-container-section">
+            <div class="categories-scroll" id="categories-list">
+                <!-- Dynamically loaded categories -->
+            </div>
+        </section>
+
+        <!-- Home View / Product Grid -->
+        <section id="home-view" class="view-section active">
+            <div class="view-header">
+                <h1 class="section-title">Explore Products</h1>
+                <div class="pagination-controls">
+                    <button class="btn-icon" id="prev-page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                    <span class="page-number" id="current-page-display">Page 1</span>
+                    <button class="btn-icon" id="next-page-btn" disabled><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="products-grid" id="products-grid-container">
+                <!-- Dynamically loaded products -->
+            </div>
+        </section>
+
+        <!-- Orders View -->
+        <section id="orders-view" class="view-section hidden">
+            <h1 class="section-title">Your Order History</h1>
+            <div class="orders-list-container" id="orders-list">
+                <!-- Dynamically loaded orders -->
+            </div>
+        </section>
+
+        <!-- Provider Dashboard View -->
+        <section id="provider-view" class="view-section hidden">
+            <h1 class="section-title">Seller Dashboard</h1>
+            
+            <!-- Provider Stats -->
+            <div class="stats-grid" id="provider-stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Products</span>
+                        <h2 class="stat-value" id="prov-stat-products">0</h2>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-receipt"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Orders</span>
+                        <h2 class="stat-value" id="prov-stat-orders">0</h2>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Sales</span>
+                        <h2 class="stat-value" id="prov-stat-sales">₹0.00</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Provider Sub-views (Tabs) -->
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-btn active" id="tab-prov-products">My Products</button>
+                    <button class="tab-btn" id="tab-prov-orders">Incoming Orders</button>
+                </div>
+                
+                <div class="tab-content" id="prov-products-content">
+                    <div class="action-bar">
+                        <h3>Inventory Management</h3>
+                        <button class="btn btn-primary" id="add-product-trigger-btn"><i class="fa-solid fa-plus"></i> Add New Product</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prov-products-tbody">
+                                <!-- Provider products lists -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" id="prov-orders-content">
+                    <h3>Customer Orders</h3>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prov-orders-tbody">
+                                <!-- Provider orders list -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard View -->
+        <section id="admin-view" class="view-section hidden">
+            <h1 class="section-title">Admin Administration Console</h1>
+
+            <!-- Admin Stats -->
+            <div class="stats-grid" id="admin-stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Registered Users</span>
+                        <h2 class="stat-value" id="admin-stat-users">0</h2>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-tags"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Products</span>
+                        <h2 class="stat-value" id="admin-stat-products">0</h2>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-truck-ramp-box"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Orders</span>
+                        <h2 class="stat-value" id="admin-stat-orders">0</h2>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Gross Revenue</span>
+                        <h2 class="stat-value" id="admin-stat-revenue">₹0.00</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin: 24px 0;">
+                <div class="action-bar" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+                    <h3>Category Management</h3>
+                    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                        <input type="text" id="admin-category-name" placeholder="New category name" style="min-width: 240px;">
+                        <button class="btn btn-primary" id="create-category-btn">Create Category</button>
+                    </div>
+                </div>
+                <div id="admin-categories-list" style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px;"></div>
+            </div>
+
+            <!-- Admin Control Tabs -->
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-btn active" id="tab-admin-customers">Customers</button>
+                    <button class="tab-btn" id="tab-admin-providers">Sellers/Providers</button>
+                </div>
+                
+                <div class="tab-content" id="admin-customers-content">
+                    <h3>Customer Registrations</h3>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-customers-tbody">
+                                <!-- Customers list -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" id="admin-providers-content">
+                    <h3>Seller Accounts Verification</h3>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-providers-tbody">
+                                <!-- Providers list -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checkout View -->
+        <section id="checkout-view" class="view-section hidden">
+            <h1 class="section-title">Secure Checkout</h1>
+            <div class="checkout-grid">
+                <div class="checkout-form-container card">
+                    <h2><i class="fa-solid fa-location-dot"></i> Shipping Address</h2>
+                    <div class="address-selector-container" id="checkout-address-list">
+                        <!-- Loaded addresses -->
+                    </div>
+                    <button class="btn btn-outline" id="checkout-add-address-btn"><i class="fa-solid fa-plus"></i> Add New Address</button>
+                    
+                    <h2 class="mt-2"><i class="fa-solid fa-credit-card"></i> Payment Method</h2>
+                    <div class="payment-method-selector">
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="online" checked>
+                            <span class="option-label"><i class="fa-solid fa-globe"></i> Pay Online (Cards / UPI)</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="cod">
+                            <span class="option-label"><i class="fa-solid fa-hand-holding-dollar"></i> Cash on Delivery</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="order-summary-container card">
+                    <h2>Order Summary</h2>
+                    <div id="checkout-summary-items">
+                        <!-- Summary items -->
+                    </div>
+                    <hr>
+                    <div class="summary-total">
+                        <span>Total Payable</span>
+                        <span id="checkout-grand-total">₹0.00</span>
+                    </div>
+                    <button class="btn btn-primary btn-block" id="place-order-btn">Place Order</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart Sidebar Drawer -->
+    <div class="cart-drawer-overlay" id="cart-drawer-overlay">
+        <div class="cart-drawer">
+            <div class="cart-drawer-header">
+                <h2>Your Shopping Cart</h2>
+                <button class="btn-icon" id="cart-close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="cart-drawer-content" id="cart-items-container">
+                <!-- Cart items loaded here -->
+            </div>
+
+            <div class="cart-drawer-footer">
+                <div class="cart-total-row">
+                    <span>Subtotal:</span>
+                    <span id="cart-total-amount">₹0.00</span>
+                </div>
+                <button class="btn btn-primary btn-block" id="cart-checkout-btn">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay active" id="login-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Welcome Back</h2>
+                <button class="btn-icon modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" required placeholder="admin@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required placeholder="admin">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                <p style="margin-top: 12px; color: var(--text-muted); font-size: 13px; text-align: center;">Demo admin: admin@gmail.com / admin</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal-overlay" id="register-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Create Account</h2>
+                <button class="btn-icon modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="reg-name">Full Name</label>
+                    <input type="text" id="reg-name" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email Address</label>
+                    <input type="email" id="reg-email" required placeholder="name@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="reg-phone">Phone Number</label>
+                    <input type="text" id="reg-phone" required placeholder="9876543210">
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" required placeholder="Min 6 characters">
+                </div>
+                <div class="form-group">
+                    <label for="reg-role">I want to register as a:</label>
+                    <select id="reg-role">
+                        <option value="customer">Customer</option>
+                        <option value="provider">Seller (Provider)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div class="modal-overlay" id="product-detail-modal">
+        <div class="modal-card modal-large">
+            <div class="modal-header">
+                <h2 id="modal-product-name">Product Details</h2>
+                <button class="btn-icon modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="product-modal-grid">
+                <div class="product-modal-image-container">
+                    <img id="modal-product-img" src="" alt="Product Image">
+                </div>
+                <div class="product-modal-details">
+                    <span class="product-detail-category" id="modal-product-category">Category</span>
+                    <h2 class="product-detail-title" id="modal-product-title-detail">Product Title</h2>
+                    <p class="product-detail-desc" id="modal-product-desc">Product Description text goes here...</p>
+                    <div class="product-detail-meta">
+                        <span class="product-detail-price" id="modal-product-price">₹0.00</span>
+                        <span class="product-detail-stock" id="modal-product-stock">In Stock: 0</span>
+                    </div>
+                    <div class="product-detail-actions">
+                        <div class="quantity-selector">
+                            <button class="qty-btn" id="qty-minus"><i class="fa-solid fa-minus"></i></button>
+                            <input type="number" id="qty-input" value="1" min="1">
+                            <button class="qty-btn" id="qty-plus"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                        <button class="btn btn-primary" id="modal-add-to-cart-btn"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal (Provider Only) -->
+    <div class="modal-overlay" id="add-product-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Add Product to Catalog</h2>
+                <button class="btn-icon modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="add-product-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="prod-name">Product Name</label>
+                    <input type="text" id="prod-name" required placeholder="e.g. iPhone 15 Pro">
+                </div>
+                <div class="form-group">
+                    <label for="prod-desc">Description</label>
+                    <textarea id="prod-desc" required placeholder="Product specifications, features..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="prod-price">Price (INR)</label>
+                    <input type="number" id="prod-price" step="0.01" required placeholder="75000">
+                </div>
+                <div class="form-group">
+                    <label for="prod-stock">Stock Quantity</label>
+                    <input type="number" id="prod-stock" required placeholder="20">
+                </div>
+                <div class="form-group">
+                    <label for="prod-category">Category</label>
+                    <select id="prod-category" required>
+                        <!-- Dynamically loaded categories -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="prod-image">Product Image File</label>
+                    <input type="file" id="prod-image" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Upload Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Address Modal -->
+    <div class="modal-overlay" id="add-address-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Add Shipping Address</h2>
+                <button class="btn-icon modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="add-address-form">
+                <div class="form-group">
+                    <label for="addr-line1">Address Line 1</label>
+                    <input type="text" id="addr-line1" required placeholder="House No, Building, Street">
+                </div>
+                <div class="form-group">
+                    <label for="addr-line2">Address Line 2 (Optional)</label>
+                    <input type="text" id="addr-line2" placeholder="Locality, Landmark">
+                </div>
+                <div class="form-group">
+                    <label for="addr-city">City</label>
+                    <input type="text" id="addr-city" required placeholder="Bangalore">
+                </div>
+                <div class="form-group">
+                    <label for="addr-state">State</label>
+                    <input type="text" id="addr-state" required placeholder="Karnataka">
+                </div>
+                <div class="form-group">
+                    <label for="addr-country">Country</label>
+                    <input type="text" id="addr-country" required value="India">
+                </div>
+                <div class="form-group">
+                    <label for="addr-postal">Postal / ZIP Code</label>
+                    <input type="text" id="addr-postal" required placeholder="560001">
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="addr-default">
+                    <label for="addr-default">Set as default address</label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save Address</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript App Logic -->
+    <script src="/frontend/js/auth.js"></script>
+    <script src="/frontend/js/product.js"></script>
+    <script src="/frontend/js/cart.js"></script>
+    <script src="/frontend/js/dashboard.js"></script>
+    <script src="/frontend/js/app.js"></script>
+</body>
+</html>

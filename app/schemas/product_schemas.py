@@ -24,6 +24,9 @@ class ProductListItem(BaseModel):
     id: int
     name: str
     price: float
+    stock_quantity: int
+    category_id: Optional[int]
+    image_url: Optional[str]
 
     class Config:
         from_attributes = True

@@ -48,13 +48,14 @@ async def get_admin_dashboard(db: Session):
     }
 
 async def get_admin_users(db: Session):
-    users = db.query(User).filter(User.role == UserRole.CUSTOMER).all()
+    users = db.query(User).filter(User.role != UserRole.ADMIN).all()
     return [
         {
             "id": u.id,
             "full_name": u.full_name,
             "email": u.email,
             "phone": u.phone,
+            "role": u.role.value if hasattr(u.role, "value") else str(u.role),
             "is_active": u.is_active
         } for u in users
     ]

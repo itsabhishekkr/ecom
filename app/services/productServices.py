@@ -30,7 +30,15 @@ async def get_products(
     offset = (page - 1) * limit
     products = query.offset(offset).limit(limit).all()
     
-    data = [{"id": p.id, "name": p.name, "price": float(p.price)} for p in products]
+    data = [{
+        "id": p.id,
+        "name": p.name,
+        "price": float(p.price),
+        "stock_quantity": p.stock_quantity,
+        "image_url": p.image_url,
+        "description": p.description,
+        "category_id": p.category_id
+    } for p in products]
     
     return {
         "total": total,

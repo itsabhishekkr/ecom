@@ -14,11 +14,22 @@ from app.routers.addressRouters import router as address_routers
 from app.routers.paymentRouters import router as payment_routers
 from app.routers.seed_admin import seed_admin
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
 import os
 app = FastAPI()
 
 
 app.mount("/uploads",StaticFiles(directory="uploads"),name="uploads")
+app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+
+@app.get("/", response_class=HTMLResponse)
+async def get_index():
+    index_file_path = os.path.join("frontend", "index.html")
+    if os.path.exists(index_file_path):
+        with open(index_file_path, "r", encoding="utf-8") as f:
+            return f.read()
+    return "<h1>Aura E-Commerce Backend</h1><p>Frontend assets not found.</p>"
+
 
 
 Base.metadata.create_all(bind=engine)

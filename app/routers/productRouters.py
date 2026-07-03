@@ -14,7 +14,7 @@ router = APIRouter(
     tags=["Products"]
 )
 
-@router.get("", response_model=ProductListResponse)
+@router.get("")
 async def list_products(
     search: Optional[str] = Query(None),
     category: Optional[int] = Query(None),
