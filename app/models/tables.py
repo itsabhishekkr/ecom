@@ -113,9 +113,6 @@ class Category(Base):
     )
 
 
-# ==========================
-# PRODUCTS
-# ==========================
 
 class Product(Base):
     __tablename__ = "products"
@@ -257,6 +254,17 @@ class Order(Base):
         ForeignKey("users.id")
     )
 
+    address_id = Column(
+        Integer,
+        ForeignKey("addresses.id"),
+        nullable=True
+    )
+
+    payment_method = Column(
+        String(50),
+        default="online"
+    )
+
     total_amount = Column(
         Numeric(10,2)
     )
@@ -274,4 +282,107 @@ class Order(Base):
     user = relationship(
         "User",
         back_populates="orders"
+    )
+
+    address = relationship(
+        "Address"
+    )
+
+    items = relationship(
+        "OrderItem",
+        back_populates="order",
+        cascade="all, delete"
+    )
+
+
+# ==========================
+# ORDER ITEMS
+# ==========================
+
+class OrderItem(Base):
+    __tablename__ = "order_items"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True,
+        autoincrement=True
+    )
+
+    order_id = Column(
+        Integer,
+        ForeignKey("orders.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    product_id = Column(
+        Integer,
+        ForeignKey("products.id"),
+        nullable=False
+    )
+
+    quantity = Column(
+        Integer,
+        nullable=False
+    )
+
+    price = Column(
+        Numeric(10,2),
+        nullable=False
+    )
+
+    order = relationship(
+        "Order",
+        back_populates="items"
+    )
+
+    product = relationship(
+        "Product"
+    )
+
+
+# ==========================
+# PAYMENTS
+# ==========================
+
+class Payment(Base):
+    __tablename__ = "payments"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True,
+        autoincrement=True
+    )
+
+    order_id = Column(
+        Integer,
+        ForeignKey("orders.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    payment_id = Column(
+        String(100),
+        unique=True,
+        index=True,
+        nullable=False
+    )
+
+    amount = Column(
+        Numeric(10,2),
+        nullable=False
+    )
+
+    status = Column(
+        String(50),
+        default="pending"
+    )
+
+    created_at = Column(
+        DateTime,
+        server_default=func.now()
+    )
+
+    order = relationship(
+        "Order"
     )

@@ -1,28 +1,83 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.core.getRole import get_current_user,require_admin
+from app.core.getRole import require_admin
 from app.models.dataConfig import get_db
-from app.models.tables import Category
-from app.schemas.auth_schemas import CategoryCreate,CategoryUpdate
-from app.services.adminServices import create_category,update_category,delete_category,get_all_users
+from app.schemas.auth_schemas import CategoryCreate, CategoryUpdate
+from app.schemas.admin_schema import UserStatusUpdate
+from app.services.adminServices import (
+    create_category,
+    update_category,
+    delete_category,
+    get_all_users,
+    get_admin_dashboard,
+    get_admin_users,
+    get_admin_providers,
+    toggle_user_active
+)
 
 router = APIRouter(
     prefix="/admin",
-    tags=["Authentication"]
+    tags=["Admin"]
 )
 
 @router.post("/categories")
-async def create_new_category(category: CategoryCreate,current_user=Depends(require_admin),db: Session = Depends(get_db)):
+async def create_new_category(
+    category: CategoryCreate,
+    current_user = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
     return await create_category(category, db=db)
 
 @router.put("/categories/{id}")
-async def update_existing_category(id: int,category: CategoryUpdate,current_user=Depends(require_admin),db: Session = Depends(get_db)):
-    return await update_category(id, category,db)
+async def update_existing_category(
+    id: int,
+    category: CategoryUpdate,
+    current_user = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+    return await update_category(id, category, db)
 
 @router.delete("/categories/{id}")
-async def delete_existing_category(id: int,current_user=Depends(require_admin),db: Session = Depends(get_db)):
-    return await delete_category(id,db)
+async def delete_existing_category(
+    id: int,
+    current_user = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+    return await delete_category(id, db)
 
 @router.get("/all/users")
-async def get_users(current_user=Depends(require_admin),db: Session = Depends(get_db)):
+async def get_users(
+    current_user = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
     return await get_all_users(db)
+
+@router.get("/dashboard")
+async def admin_dashboard(
+    current_user = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+    return await get_admin_dashboard(db)
+
+@router.get("/users")
+async def list_admin_users(
+    current_user = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+    return await get_admin_users(db)
+
+@router.get("/providers")
+async def list_admin_providers(
+    current_user = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+    return await get_admin_providers(db)
+
+@router.put("/users/{id}")
+async def update_user_status(
+    id: int,
+    status_update: UserStatusUpdate,
+    current_user = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+    return await toggle_user_active(db, id, status_update.is_active)

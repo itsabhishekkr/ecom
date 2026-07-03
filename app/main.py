@@ -6,9 +6,21 @@ from app.models import tables  # noqa: F401
 from app.routers.auth import router as auth_routers
 from app.routers.adminRouters import router as admin_routers
 from app.routers.commanRouters import router as comman_routers
-from app.routers.providerRourers import router as provider_routers
+from app.routers.providerRourers import router as provider_routers, legacy_pro_router
+from app.routers.productRouters import router as product_routers
+from app.routers.cartRouters import router as cart_routers
+from app.routers.orderRouters import router as order_routers
+from app.routers.addressRouters import router as address_routers
+from app.routers.paymentRouters import router as payment_routers
 from app.routers.seed_admin import seed_admin
+from fastapi.staticfiles import StaticFiles
+import os
 app = FastAPI()
+
+
+app.mount("/uploads",StaticFiles(directory="uploads"),name="uploads")
+
+
 Base.metadata.create_all(bind=engine)
 ## first call the seed admin function here to create the admin user in the database
 # create a session and pass it to the seeder, then close the session
@@ -22,6 +34,12 @@ app.include_router(auth_routers)
 app.include_router(admin_routers)
 app.include_router(comman_routers)
 app.include_router(provider_routers)
+app.include_router(legacy_pro_router)
+app.include_router(product_routers)
+app.include_router(cart_routers)
+app.include_router(order_routers)
+app.include_router(address_routers)
+app.include_router(payment_routers)
 
 # @app.get("/")
 # def read_root():

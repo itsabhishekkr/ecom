@@ -1,12 +1,30 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from fastapi import Form
 
-class ProductAdd(BaseModel):
+
+class ProductCreate(BaseModel):
     name: str
     description: str
     price: float
-    stock_quantity: int = Field(default=0, ge=0)
+    stock_quantity: int
     category_id: int
-    provider_id: int
-    image_url: str = Field(default=None, description="URL of the product image")
 
+    @classmethod
+    def as_form(
+        cls,
+        name: str = Form(...),
+        description: str = Form(...),
+        price: float = Form(...),
+        stock_quantity: int = Form(...),
+        category_id: int = Form(...)
+    ):
+        return cls(
+            name=name,
+            description=description,
+            price=price,
+            stock_quantity=stock_quantity,
+            category_id=category_id
+        )
 
+class ProviderOrderStatusUpdate(BaseModel):
+    status: str
