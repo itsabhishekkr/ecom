@@ -502,55 +502,65 @@ async function handlePlaceOrder() {
     }
 }
 
-// Simulate Online Payment Gateway Flow
+// Razorpay Checkout Flow
 async function triggerPaymentGate(orderId) {
     try {
         const payInit = await apiCall("/payments/create", "POST", { order_id: orderId });
-        const url = payInit.payment_url;
-        
-        // Extract payment ID from response URL query string
-        const urlParams = new URLSearchParams(url.split("?")[1]);
-        const paymentId = urlParams.get("payment_id");
-        
-        // Create dynamic modal for Gateway Simulation
-        const modal = document.createElement("div");
-        modal.className = "modal-overlay active";
-        modal.style.zIndex = "3000";
-        modal.innerHTML = `
-            <div class="modal-card" style="text-align: center;">
-                <h2 style="margin-bottom: 20px;"><i class="fa-solid fa-shield-halved" style="color:var(--secondary);"></i> Secure Gateway</h2>
-                <p style="color:var(--text-muted); margin-bottom: 24px;">Simulating payment processing of <strong>₹${urlParams.get("amount")}</strong> via AuraPay.</p>
-                <div style="display:flex; gap:16px; justify-content:center;">
-                    <button class="btn btn-primary" id="btn-pay-success">Pay Success</button>
-                    <button class="btn btn-outline" id="btn-pay-fail">Cancel</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        
-        document.getElementById("btn-pay-success").onclick = async () => {
-            modal.remove();
-            showToast("Payment success! Verifying...");
-            
-            try {
-                await apiCall("/payments/verify", "POST", { payment_id: paymentId });
-                showToast("Payment verified successfully!");
-                showView("orders-view");
-                fetchOrders();
-            } catch (err) {
-                // Handled
+
+        if (!window.Razorpay) {
+            await new Promise((resolve, reject) => {
+                const script = document.createElement("script");
+                script.src = "https://checkout.razorpay.com/v1/checkout.js";
+                script.onload = resolve;
+                script.onerror = reject;
+                document.body.appendChild(script);
+            });
+        }
+
+        const options = {
+            key: payInit.key_id,
+            amount: Math.round(payInit.amount * 100),
+            currency: payInit.currency || "INR",
+            name: "Ecom Store",
+            description: `Order #${payInit.order_id}`,
+            order_id: payInit.razorpay_order_id,
+            handler: async function (response) {
+                showToast("Payment success! Verifying...");
+                try {
+                    await apiCall("/payments/verify", "POST", {
+                        payment_id: payInit.payment_id,
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature
+                    });
+                    showToast("Payment verified successfully!");
+                    showView("orders-view");
+                    fetchOrders();
+                } catch (err) {
+                    // Handled
+                }
+            },
+            prefill: {
+                name: state.user?.full_name || "",
+                email: state.user?.email || "",
+                contact: state.user?.phone || ""
+            },
+            theme: {
+                color: "#f59e0b"
+            },
+            modal: {
+                ondismiss: function () {
+                    showToast("Payment cancelled. Order remains pending.", "warning");
+                    showView("orders-view");
+                    fetchOrders();
+                }
             }
         };
-        
-        document.getElementById("btn-pay-fail").onclick = () => {
-            modal.remove();
-            showToast("Payment cancelled. Order remains pending.", "warning");
-            showView("orders-view");
-            fetchOrders();
-        };
-        
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
     } catch (e) {
-        // Handled
+        showToast("Unable to initialize payment. Please try again.", "warning");
     }
 }
 

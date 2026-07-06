@@ -1,0 +1,26 @@
+loaded_h_0(function(_){var window=this;
+_.v("ESrPQc");
+_.Tgi=new _.Yf(_.l3a);
+_.x();
+_.Xgi=_.y("PsPAfd",[_.l3a,_.o3a]);
+_.v("PsPAfd");
+var Zgi=function(a,b,c){b!==0&&(a.oa.has(b)?a.oa.get(b).push(c):a.oa.set(b,[c]))},$gi=class{constructor(a){this.oa=a}};var ahi=async function(a,{mib:b,hg:c,productViewerMetadata:d,WD:e,Upb:f=""}){var g=(0,_.Vf)(),h=g();g=g(1);try{let k=_.B(a.oa,4)?g(await h(a.Aa())):[],l={hg:c,mib:b,MIe:_.Dj(a.oa,7),productViewerMetadata:d,EMe:k,WD:e,Upb:f,Nkb:a};g(await h(a.wla.oCb(l)))}finally{h()}},bhi=class extends _.zs{static Ta(){return{jsdata:{tDd:_.Ygi},service:{wla:_.Tgi,D8a:_.Ugi}}}constructor(a){super(a.Na);this.Aa=async()=>_.ph(this.oa,_.RS,1,_.qh()).length?_.ph(this.oa,_.RS,1,_.qh(_.Xi)):Promise.all(Array.from(this.getRoot().el().querySelectorAll("[data-pv-entrypoint]"),
+b=>this.Gc(b,_.Qo))).then(b=>b.map(c=>c.Bc()));this.wla=a.service.wla;this.D8a=a.service.D8a;this.oa=_.p(a.jsdata.tDd,_.rT,1);this.flags=a.jsdata.tDd.oL();this.wla.Hye(this.flags);this.Ba=new $gi(this.Aa);Zgi(this.D8a,_.Dj(this.oa,7),this.Ba);this.addOnDisposeCallback(()=>{var b=this.D8a,c=_.Dj(this.oa,7),d=this.Ba;c!==0&&b.oa.has(c)&&(b=b.oa.get(c),d=b.indexOf(d,0),d>-1&&b.splice(d,1))})}async Ca(a){var b=(0,_.Vf)(),c=b();b=b(1);try{let d,e=((d=a.data)==null?void 0:d.WD)||a.targetElement,f,g=((f=
+a.data)==null?void 0:f.hg)||_.Re(this.Ja("B1641c").el()),h,k=((h=a.data)==null?void 0:h.Upb)||"",l=this.Bc(a);if(!l)return!0;b(await c(ahi(this,{mib:!1,hg:g,productViewerMetadata:l,WD:e,Upb:k})))}finally{c()}}async Da(a){var b=(0,_.Vf)(),c=b();b=b(1);try{let d=a.data.LIe,e=a.data.query,f=_.Re(this.getRoot().el()),g=null,h=b(await c(this.Aa()));for(let k of h){let l=(new _.vgi(e,k)).getKey();if(d.getKey()===l){g=k;break}}g&&b(await c(ahi(this,{mib:!0,hg:f,WD:a.targetElement,productViewerMetadata:g})))}finally{c()}}Bc(a){var b;
+if((b=a.data)==null?0:b.productViewerMetadata)return a.data.productViewerMetadata;b=a.targetElement;a:switch(_.wm(b.getData("pvgMetadataKey"))){case 1:a=1;break a;case 2:a=2;break a;default:a=0}b=_.sm(b.getData("pvgMetadataValue"));if(a!==0&&b)for(let d of _.ph(this.oa,_.RS,1,_.qh())){a:{switch(a){case 1:var c=_.gh(d,1);break a;case 2:c=_.gh(d,2);break a}c=void 0}if(c===b)return d}return null}};bhi.prototype.$wa$bCGqS=function(){return this.Da};bhi.prototype.$wa$egvsmc=function(){return this.Ca};
+_.Bs(_.Xgi,bhi);
+_.x();
+_.v("vRlMvf");
+_.nSd=new _.Yf(_.v3a);
+_.x();
+_.KUd=_.y("i8S0p",[_.Gr,_.v3a]);
+_.v("i8S0p");
+var eVd=function(a){var b=new _.pG;var c=_.Zi(a,bVd,32)?1:_.Zi(a,_.EUd,33)?3:2;var d=new _.PUd;c=_.Yh(d,7,c);c=_.Zh(c,4,!0);if(_.Zi(a,bVd,32)){var e,f;d=_.u(a,18);d=_.fh(c,1,d);var g=(e=_.p(a,bVd,32))==null?void 0:e.Fs();e=_.fh(d,2,g);d=(f=_.p(a,bVd,32))==null?void 0:_.u(f,4);_.fh(e,3,d);f=_.p(a,bVd,32);_.rh(f,5)&&(f=_.p(a,bVd,32),f=_.u(f,5),_.fh(c,6,f))}b=_.GJd(b,cVd(_.QUd,c));_.Zi(a,bVd,32)&&(c=(new _.RUd).setTitle(_.p(a,bVd,32).getTitle()),f=_.u(a,18),c=_.fh(c,2,f),f=_.p(a,bVd,32).Zj(),c=_.fh(c,
+3,f),_.GJd(b,cVd(_.SUd,c)));if(_.Zi(a,_.EUd,33)){var h,k,l,n,q;c=(new _.WUd).setTitle((h=_.p(a,bVd,32))==null?void 0:h.getTitle());h=(k=_.p(a,_.EUd,33))==null?void 0:_.p(k,_.eSd,4);k=_.Ib(c,_.eSd,3,h);h=(l=_.p(a,_.EUd,33))==null?void 0:_.p(l,_.UUd,3);l=_.Ib(k,_.UUd,10,h);k=(n=_.p(a,_.EUd,33))==null?void 0:n.eG();n=_.Ib(l,_.vUd,14,k);l=(q=_.p(a,_.EUd,33))==null?void 0:_.p(q,_.VUd,11);q=_.Ib(n,_.VUd,16,l);let Z;switch((Z=_.p(a,_.EUd,33))==null?void 0:_.Dj(Z,9)){case 2:var r,t=(r=_.p(a,_.EUd,33))==null?
+void 0:r.rJ();_.Ib(q,_.tUd,12,t);break;case 3:r=(t=_.p(a,_.EUd,33))==null?void 0:_.p(t,_.OG,10),_.Ib(q,_.OG,15,r)}_.GJd(b,cVd(_.XUd,q))}var A,E,H,N,P,S;r=new _.YUd;t=(E=_.p(a,dVd,23))==null?void 0:_.p(E,_.kh,7);E=_.Ib(r,_.kh,2,t);r=(H=_.p(a,dVd,23))==null?void 0:_.Dj(H,12);H=_.Yh(E,15,r);E=(N=_.p(a,dVd,23))==null?void 0:_.u(N,9);N=_.fh(H,11,E);H=(P=_.p(a,dVd,23))==null?void 0:_.Dj(P,11);P=_.Yh(N,14,H);N=(S=_.p(a,dVd,23))==null?void 0:_.u(S,8);S=_.fh(P,3,N);P=_.Zi(a,_.EUd,33);S=_.Zh(S,12,P);P=_.Zi(a,
+bVd,32);S=_.Zh(S,13,P);a=(A=_.p(a,dVd,23))==null?void 0:_.u(A,13);A=_.fh(S,17,a);_.GJd(b,cVd(_.ZUd,A));return cVd(_.OUd,new _.NUd).Ca(b)},cVd=function(a,b){return _.HJd(new _.oG,(new _.mG).oa(a,b))},dVd=class extends _.m{constructor(a){super(a)}mL(){return _.u(this,3)}},bVd=class extends _.m{constructor(a){super(a)}getTitle(){return _.u(this,1)}setTitle(a){return _.fh(this,1,a)}wd(){return _.rh(this,1)}Zj(){return _.u(this,2)}Fs(){return _.u(this,3)}OO(){return _.rh(this,3)}},fVd=function(a,b){return _.Ib(a,
+_.oG,1,b)},gVd=function(a,b){return _.fh(a,2,b)};var hVd=class extends _.zs{static Ta(){return{jsdata:{z6c:_.PG},service:{Dh:_.KG,Kxc:_.nSd}}}constructor(a){super(a.Na);this.triggerElement=null;this.z6c=a.jsdata.z6c;this.Dh=a.service.Dh;this.Kxc=a.service.Kxc}async Sc(a){var b=(0,_.Vf)(),c=b();b=b(1);try{a.event&&a.event.preventDefault();let d=a.ub.el();this.triggerElement=d.querySelector('[role="button"]')||d;let e=a.ub.el(),f=gVd(fVd(new _.MUd,eVd(this.z6c)),this.getRoot().el().id),g=this.Kxc.getInstance(f,()=>{this.triggerElement&&(this.triggerElement.focus({preventScroll:!0}),
+this.triggerElement=null)});b(await c(this.Dh.showViewer({viewerType:47,entrypoint:e,rB:g,r8:!0,mX:_.JUd?_.aVd:void 0})))}finally{c()}}};hVd.prototype.$wa$h5M12e=function(){return this.Sc};_.Bs(_.KUd,hVd);
+_.x();
+});
+// Google Inc.

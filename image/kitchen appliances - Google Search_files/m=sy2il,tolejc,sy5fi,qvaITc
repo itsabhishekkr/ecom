@@ -1,0 +1,12 @@
+loaded_h_0(function(_){var window=this;
+_.JVe=_.y("tolejc",[_.Gr]);
+_.v("tolejc");
+_.RVe=class extends _.vo{static Ta(){return{service:{Dh:_.KG}}}constructor(a){super();this.Dh=a.service.Dh}tla(a){return this.Dh.prefetch(a)}oa(a){var b=a.pluginData;if(_.gi(_.NVe)(b)){var c=12;_.KVe(_.MVe(b,"local-place-viewer"),"lcl_pv");b=(0,_.QVe)(b)}else c=38,_.fh(b,3,a.entrypoint.id||null),b=(0,_.IVe)(b);var d=Object.assign({},a);d=(delete d.pluginData,d);this.Dh.showViewerLite(Object.assign({},d,{Ula:b,Apb:a.entrypoint.hasAttribute("data-ssid"),contentPluginType:c,viewerType:10}))}};
+_.eg(_.JVe,_.RVe);
+_.x();
+_.rRp=_.y("qvaITc",[_.JVe,_.nr]);
+_.v("qvaITc");
+var sRp=class extends _.zs{static Ta(){return{service:{Ys:_.RVe,xc:_.Yx}}}constructor(a){super(a.Na);this.Ys=a.service.Ys;this.xc=a.service.xc}oa(a){var b=new URLSearchParams(_.Xx(this.xc)),c;_.Srf({Ys:this.Ys,id:{mid:_.sm(a.ub.getData("mid")),Ug:_.sm(a.ub.getData("fid"))},contentId:this.getRoot().el().id,mGa:_.sm(this.getRoot().getData("lqi")),query:(c=b.get("q"))!=null?c:"",GMb:this.getRoot().el(),Dz:_.LO(this.getRoot()),r8:!0})}};sRp.prototype.$wa$IEAdff=function(){return this.oa};_.Bs(_.rRp,sRp);
+_.x();
+});
+// Google Inc.

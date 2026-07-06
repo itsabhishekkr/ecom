@@ -5,30 +5,104 @@
 # (send SQL to MySQL) 
 
 # update in the database -> session.commit() -> commit the changes to the database
-from sqlalchemy import Column, Integer, String, Text,Float, Boolean, Numeric,ForeignKey, DateTime, Enum
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Text,
+    Float,
+    Boolean,
+    Numeric,
+    ForeignKey,
+    DateTime,
+    Enum
+)
+
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import enum
 
 from app.models.dataConfig import Base
 
+
+# ====================================
+# ENUMS
+# ====================================
+
 class UserRole(str, enum.Enum):
     CUSTOMER = "customer"
     PROVIDER = "provider"
     ADMIN = "admin"
 
+
+class OrderStatus(str, enum.Enum):
+    PENDING = "pending"
+    CONFIRMED = "confirmed"
+    SHIPPED = "shipped"
+    DELIVERED = "delivered"
+    CANCELLED = "cancelled"
+
+
+class PaymentStatus(str, enum.Enum):
+    PENDING = "pending"
+    SUCCESS = "success"
+    FAILED = "failed"
+    REFUNDED = "refunded"
+
+
+# ====================================
+# USERS
+# ====================================
+
 class User(Base):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True,autoincrement=True)
-    full_name = Column(String(100), nullable=False)
-    email = Column(String(100),unique=True,index=True,nullable=False)
-    phone = Column(String(20))
-    password_hash = Column(String,nullable=False)
-    role = Column(Enum(UserRole),default=UserRole.CUSTOMER)
-    is_active = Column(Boolean,default=True)
-    created_at = Column(DateTime,server_default=func.now())
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        index=True
+    )
+
+    full_name = Column(
+        String(100),
+        nullable=False
+    )
+
+    email = Column(
+        String(100),
+        unique=True,
+        nullable=False,
+        index=True
+    )
+
+    phone = Column(
+        String(20)
+    )
+
+    password_hash = Column(
+        String,
+        nullable=False
+    )
+
+    role = Column(
+        Enum(UserRole),
+        default=UserRole.CUSTOMER
+    )
+
+    is_active = Column(
+        Boolean,
+        default=True
+    )
+
+    created_at = Column(
+        DateTime,
+        server_default=func.now(),
+        index=True
+    )
 
     # Relationships
+
     addresses = relationship(
         "Address",
         back_populates="user",
@@ -37,15 +111,20 @@ class User(Base):
 
     orders = relationship(
         "Order",
-        back_populates="user"
+        back_populates="user",
+        cascade="all, delete"
     )
 
     products = relationship(
         "Product",
-        back_populates="provider"
+        back_populates="provider",
+        cascade="all, delete"
     )
 
 
+# ====================================
+# ADDRESSES
+# ====================================
 
 class Address(Base):
     __tablename__ = "addresses"
@@ -53,8 +132,8 @@ class Address(Base):
     id = Column(
         Integer,
         primary_key=True,
+        autoincrement=True,
         index=True
-        ,autoincrement=True
     )
 
     user_id = Column(
@@ -88,9 +167,9 @@ class Address(Base):
     )
 
 
-# ==========================
+# ====================================
 # CATEGORIES
-# ==========================
+# ====================================
 
 class Category(Base):
     __tablename__ = "categories"
@@ -98,13 +177,19 @@ class Category(Base):
     id = Column(
         Integer,
         primary_key=True,
-        index=True,
-        autoincrement=True
+        autoincrement=True,
+        index=True
     )
 
     name = Column(
         String(100),
-        unique=True
+        unique=True,
+        nullable=False
+    )
+
+    created_at = Column(
+        DateTime,
+        server_default=func.now()
     )
 
     products = relationship(
@@ -113,6 +198,9 @@ class Category(Base):
     )
 
 
+# ====================================
+# PRODUCTS
+# ====================================
 
 class Product(Base):
     __tablename__ = "products"
@@ -120,8 +208,8 @@ class Product(Base):
     id = Column(
         Integer,
         primary_key=True,
-        index=True,
-        autoincrement=True
+        autoincrement=True,
+        index=True
     )
 
     name = Column(
@@ -143,20 +231,32 @@ class Product(Base):
 
     image_url = Column(Text)
 
-    category_id = Column(
-        Integer,
-        ForeignKey("categories.id")
+    is_active = Column(
+        Boolean,
+        default=True
     )
 
-    # service provider/seller
+    category_id = Column(
+        Integer,
+        ForeignKey("categories.id"),
+        index=True
+    )
+
     provider_id = Column(
         Integer,
-        ForeignKey("users.id")
+        ForeignKey("users.id"),
+        index=True
     )
 
     created_at = Column(
         DateTime,
         server_default=func.now()
+    )
+
+    updated_at = Column(
+        DateTime,
+        server_default=func.now(),
+        onupdate=func.now()
     )
 
     category = relationship(
@@ -170,9 +270,9 @@ class Product(Base):
     )
 
 
-# ==========================
+# ====================================
 # CART
-# ==========================
+# ====================================
 
 class Cart(Base):
     __tablename__ = "carts"
@@ -180,13 +280,18 @@ class Cart(Base):
     id = Column(
         Integer,
         primary_key=True,
-        index=True,
-        autoincrement=True
+        autoincrement=True,
+        index=True
     )
 
     user_id = Column(
         Integer,
-        ForeignKey("users.id")
+        ForeignKey("users.id"),
+        unique=True
+    )
+
+    user = relationship(
+        "User"
     )
 
     items = relationship(
@@ -196,9 +301,9 @@ class Cart(Base):
     )
 
 
-# ==========================
+# ====================================
 # CART ITEMS
-# ==========================
+# ====================================
 
 class CartItem(Base):
     __tablename__ = "cart_items"
@@ -206,13 +311,16 @@ class CartItem(Base):
     id = Column(
         Integer,
         primary_key=True,
-        index=True,
-        autoincrement=True
+        autoincrement=True,
+        index=True
     )
 
     cart_id = Column(
         Integer,
-        ForeignKey("carts.id")
+        ForeignKey(
+            "carts.id",
+            ondelete="CASCADE"
+        )
     )
 
     product_id = Column(
@@ -235,9 +343,9 @@ class CartItem(Base):
     )
 
 
-# ==========================
+# ====================================
 # ORDERS
-# ==========================
+# ====================================
 
 class Order(Base):
     __tablename__ = "orders"
@@ -245,8 +353,8 @@ class Order(Base):
     id = Column(
         Integer,
         primary_key=True,
-        index=True,
-        autoincrement=True
+        autoincrement=True,
+        index=True
     )
 
     user_id = Column(
@@ -256,8 +364,7 @@ class Order(Base):
 
     address_id = Column(
         Integer,
-        ForeignKey("addresses.id"),
-        nullable=True
+        ForeignKey("addresses.id")
     )
 
     payment_method = Column(
@@ -266,12 +373,13 @@ class Order(Base):
     )
 
     total_amount = Column(
-        Numeric(10,2)
+        Numeric(10,2),
+        nullable=False
     )
 
     status = Column(
-        String(50),
-        default="pending"
+        Enum(OrderStatus),
+        default=OrderStatus.PENDING
     )
 
     created_at = Column(
@@ -295,9 +403,9 @@ class Order(Base):
     )
 
 
-# ==========================
+# ====================================
 # ORDER ITEMS
-# ==========================
+# ====================================
 
 class OrderItem(Base):
     __tablename__ = "order_items"
@@ -305,20 +413,21 @@ class OrderItem(Base):
     id = Column(
         Integer,
         primary_key=True,
-        index=True,
-        autoincrement=True
+        autoincrement=True,
+        index=True
     )
 
     order_id = Column(
         Integer,
-        ForeignKey("orders.id", ondelete="CASCADE"),
-        nullable=False
+        ForeignKey(
+            "orders.id",
+            ondelete="CASCADE"
+        )
     )
 
     product_id = Column(
         Integer,
-        ForeignKey("products.id"),
-        nullable=False
+        ForeignKey("products.id")
     )
 
     quantity = Column(
@@ -341,9 +450,9 @@ class OrderItem(Base):
     )
 
 
-# ==========================
+# ====================================
 # PAYMENTS
-# ==========================
+# ====================================
 
 class Payment(Base):
     __tablename__ = "payments"
@@ -351,21 +460,22 @@ class Payment(Base):
     id = Column(
         Integer,
         primary_key=True,
-        index=True,
         autoincrement=True
     )
 
     order_id = Column(
         Integer,
-        ForeignKey("orders.id", ondelete="CASCADE"),
-        nullable=False
+        ForeignKey("orders.id")
     )
 
-    payment_id = Column(
-        String(100),
-        unique=True,
-        index=True,
-        nullable=False
+    razorpay_order_id = Column(
+        String(255),
+        unique=True
+    )
+
+    razorpay_payment_id = Column(
+        String(255),
+        unique=True
     )
 
     amount = Column(
@@ -374,8 +484,12 @@ class Payment(Base):
     )
 
     status = Column(
-        String(50),
-        default="pending"
+        Enum(PaymentStatus),
+        default=PaymentStatus.PENDING
+    )
+
+    payment_method = Column(
+        String(50)
     )
 
     created_at = Column(
@@ -384,5 +498,6 @@ class Payment(Base):
     )
 
     order = relationship(
-        "Order"
+        "Order",
+        backref="payment"
     )

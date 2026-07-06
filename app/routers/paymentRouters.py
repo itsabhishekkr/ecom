@@ -23,4 +23,10 @@ async def check_payment(
     verification_data: PaymentVerify,
     db: Session = Depends(get_db)
 ):
-    return await verify_payment(db, verification_data.payment_id)
+    return await verify_payment(
+        db,
+        verification_data.payment_id,
+        verification_data.razorpay_order_id,
+        verification_data.razorpay_payment_id,
+        verification_data.razorpay_signature,
+    )
