@@ -98,7 +98,7 @@ async def verify_payment(
         payment.razorpay_payment_id = razorpay_payment_id
         order = payment.order
         if order:
-            order.status = "processing"
+            order.status = OrderStatus.CONFIRMED
 
         db.commit()
         return {"status": "success"}

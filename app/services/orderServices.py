@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from app.models.tables import Cart, CartItem, Product, Order, OrderItem, Address, UserRole
+from app.models.tables import Cart, CartItem, Product, Order, OrderItem, Address, UserRole, OrderStatus
 
 async def create_order(db: Session, current_user, address_id: int, payment_method: str):
     # Get Cart
@@ -35,7 +35,7 @@ async def create_order(db: Session, current_user, address_id: int, payment_metho
             address_id=address_id,
             payment_method=payment_method,
             total_amount=total_amount,
-            status="pending"
+            status=OrderStatus.PENDING
         )
         db.add(order)
         db.flush()  # populate order.id

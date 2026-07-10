@@ -10,6 +10,7 @@ router = APIRouter(
     tags=["Payments"]
 )
 
+
 @router.post("/create", response_model=PaymentCreateResponse)
 async def initiate_payment(
     payment_data: PaymentCreate,
@@ -17,6 +18,7 @@ async def initiate_payment(
     current_user = Depends(get_current_user)
 ):
     return await create_payment(db, current_user, payment_data.order_id)
+
 
 @router.post("/verify", response_model=PaymentVerifyResponse)
 async def check_payment(

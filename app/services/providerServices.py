@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
-from app.models.tables import Product, Category, Order, OrderItem, User
+from app.models.tables import Product, Category, Order, OrderItem, User, OrderStatus
 from app.utils.upload import save_product_image
 
 async def create_product(product, image, db: Session, current_user):
@@ -99,8 +99,11 @@ async def update_provider_order_status(db: Session, current_user, order_id: int,
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
         
+    if status not in {s.value for s in OrderStatus}:
+        raise HTTPException(status_code=400, detail="Invalid order status")
+
     try:
-        order.status = status
+        order.status = OrderStatus(status)
         db.commit()
         return {"message": f"Order status updated to {status}"}
     except Exception as e:
