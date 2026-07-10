@@ -37,7 +37,8 @@ async def get_products(
         "stock_quantity": p.stock_quantity,
         "image_url": p.image_url,
         "description": p.description,
-        "category_id": p.category_id
+        "category_id": p.category_id,
+        "provider_id": p.provider_id
     } for p in products]
     
     return {
@@ -58,6 +59,28 @@ async def get_product_by_id(db: Session, product_id: int):
         "stock_quantity": product.stock_quantity,
         "category_id": product.category_id,
         "image_url": product.image_url
+    }
+
+
+async def get_products_for_provider(db: Session, provider_id: int):
+    query = db.query(Product).filter(Product.provider_id == provider_id)
+    products = query.all()
+
+    data = [{
+        "id": p.id,
+        "name": p.name,
+        "price": float(p.price),
+        "stock_quantity": p.stock_quantity,
+        "image_url": p.image_url,
+        "description": p.description,
+        "category_id": p.category_id,
+        "provider_id": p.provider_id
+    } for p in products]
+
+    return {
+        "total": len(data),
+        "page": 1,
+        "data": data
     }
 
 async def update_product(

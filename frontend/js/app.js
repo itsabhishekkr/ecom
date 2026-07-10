@@ -634,14 +634,10 @@ async function fetchProviderDashboard() {
 
 async function fetchProviderProducts() {
     try {
-        // Note: product endpoint list is public, we will get all products and filter for this provider
-        const res = await apiCall("/products?limit=100");
-        const tbody = document.getElementById("prov-products-tbody");
-        
-        // Filter products locally where image shows provider products (if API doesn't support provider filter)
-        // Since get_products endpoint doesn't strictly allow provider_id filter, we'll display products loaded
-        // For accurate catalog tracking, we display products
-        tbody.innerHTML = res.data.map(p => `
+            const res = await apiCall("/provider/products");
+            const tbody = document.getElementById("prov-products-tbody");
+            const providerProducts = (res.data || []);
+            tbody.innerHTML = providerProducts.map(p => `
             <tr>
                 <td><img class="table-img" src="${p.image_url || 'https://placehold.co/40px'}" onerror="this.src='https://placehold.co/40px'"></td>
                 <td><strong>${p.name}</strong></td>
@@ -696,11 +692,11 @@ async function fetchProviderOrders() {
                 <td>${o.customer}</td>
                 <td><span class="order-status-badge badge-${o.status}">${o.status}</span></td>
                 <td>
-                    <select class="btn btn-outline" style="padding:4px 8px; font-size:13px;" onchange="updateProviderOrderStatus(${o.order_id}, this.value)">
-                        <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>Processing</option>
-                        <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Shipped</option>
-                        <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Delivered</option>
-                    </select>
+                        <select class="btn btn-outline" style="padding:4px 8px; font-size:13px;" onchange="updateProviderOrderStatus(${o.order_id}, this.value)">
+                            <option value="confirmed" ${o.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                            <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                            <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                        </select>
                 </td>
             </tr>
         `).join("");

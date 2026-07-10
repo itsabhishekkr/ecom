@@ -73,17 +73,46 @@ async def get_provider_dashboard(db: Session, current_user):
     }
 
 async def get_provider_orders(db: Session, current_user):
-    orders = db.query(Order).join(OrderItem).join(Product).filter(
-        Product.provider_id == current_user.id
-    ).distinct().all()
-    
-    return [
-        {
+    orders = (
+        db.query(Order)
+        .join(OrderItem)
+        .join(Product)
+        .filter(Product.provider_id == current_user.id)
+        .distinct()
+        .all()
+    )
+
+    results = []
+    for o in orders:
+        # Only include order items that belong to this provider
+        items = (
+            db.query(OrderItem)
+            .join(Product)
+            .filter(OrderItem.order_id == o.id, Product.provider_id == current_user.id)
+            .all()
+        )
+
+        products = []
+        for item in items:
+            prod = item.product
+            products.append({
+                "product_id": prod.id if prod else item.product_id,
+                "name": prod.name if prod else "Unknown",
+                "quantity": item.quantity,
+                "price": float(item.price)
+            })
+
+        total_for_provider = sum(p["price"] * p["quantity"] for p in products)
+
+        results.append({
             "order_id": o.id,
             "customer": o.user.full_name if o.user else "Unknown",
-            "status": o.status
-        } for o in orders
-    ]
+            "status": o.status.value if hasattr(o.status, "value") else o.status,
+            "items": products,
+            "total_for_provider": float(total_for_provider),
+        })
+
+    return results
 
 async def update_provider_order_status(db: Session, current_user, order_id: int, status: str):
     # Verify the order exists and contains at least one product from this provider

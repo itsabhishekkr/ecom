@@ -37,6 +37,15 @@ async def provider_orders(
 ):
     return await get_provider_orders(db, current_user)
 
+
+@router.get("/products")
+async def provider_products(
+    db: Session = Depends(get_db),
+    current_user = Depends(require_provider)
+):
+    from app.services.productServices import get_products_for_provider
+    return await get_products_for_provider(db, current_user.id)
+
 @router.put("/orders/{id}")
 async def update_order_status(
     id: int,
