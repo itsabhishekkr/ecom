@@ -15,9 +15,20 @@ from app.routers.paymentRouters import router as payment_routers
 from app.routers.seed_admin import seed_admin
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 import os
 app = FastAPI()
 
+origins_env = os.getenv("CORS_ALLOW_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5500,http://127.0.0.1:5500,https://ecom.onrender.com")
+allow_origins = [origin.strip() for origin in origins_env.split(",") if origin.strip()]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allow_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.mount("/uploads",StaticFiles(directory="uploads"),name="uploads")
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
